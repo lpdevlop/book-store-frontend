@@ -8,9 +8,14 @@ import Footer from './component/footer';
 import NewRelease  from './component/newrelease';
 import Recomondation  from './component/recomondation';
 import Login from './component/login';
-import SearchPage from './component/SearchPage';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './component/header';
+//import Cart from './component/cart'
+import SearchResults from './component/SearchResults';
+import CartPage from './component/CartPage';
+import AdminPanel from './component/AdminPanel';
+
+// Inside your Routes
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -31,7 +36,16 @@ const App: React.FC = () => {
           }
         />
         <Route path="/login" element={<Login />} />
-        <Route path="/search" element={<SearchPage />} />
+  {/*       <Route path="/cart" element={<Cart cart={[]} onQtyChange={function (id: number, qty: number): void {
+          throw new Error('Function not implemented.');
+        } } onRemove={function (id: number): void {
+          throw new Error('Function not implemented.');
+        } }/>} /> */}
+  <Route path="/search" element={<SearchResults />} />
+  <Route path="/cart" element={<CartPage />} />
+  <Route path="/admin" element={<AdminPanel />} />
+
+
       </Routes>
 
       {!hideHeaderFooter && <Footer />}
