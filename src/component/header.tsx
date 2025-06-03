@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { FaShoppingBasket, FaSearch, FaUser } from 'react-icons/fa';
-import { IconButton, Button, Modal, Box } from '@mui/material';
-import Login from './login'
+import { IconButton, Button, Modal, Box, Menu, MenuItem } from '@mui/material';
+import Login from './login';
+import AdminRegistration from './AdminRegistration'; // adjust path if needed
+
 interface DecodedToken {
   sub: string;
   role: string;
@@ -15,8 +17,9 @@ const Header = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [user, setUser] = useState<DecodedToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isRegisterAdminOpen, setIsRegisterAdminOpen] = useState(false);
 
-  // Decode token on route change
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
@@ -39,7 +42,6 @@ const Header = () => {
       setUser(decoded);
       setIsLoginOpen(false);
 
-      // Redirect by role
       if (decoded.role === 'ROLE_ADMIN') {
         navigate('/admin');
       } else {
@@ -63,21 +65,22 @@ const Header = () => {
     }
   };
 
+  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <div className="flex items-center justify-between p-4 bg-white shadow">
-      <div
-        className="text-2xl font-bold cursor-pointer"
-        onClick={() => navigate('/')}
-      >
+      <div className="text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>
         📚 BookShop
       </div>
 
-      {/* Search */}
       <div className="flex items-center gap-2 w-[300px] bg-gray-200 rounded-full px-3 py-1">
-        <FaSearch
-          className="text-gray-600 cursor-pointer"
-          onClick={handleSearch}
-        />
+        <FaSearch className="text-gray-600 cursor-pointer" onClick={handleSearch} />
         <input
           type="text"
           value={searchQuery}
@@ -89,19 +92,38 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        {/* 👤 User or Login/Logout Button */}
         {user ? (
-          <div className="flex items-center gap-2 text-gray-700 font-medium">
-            <FaUser />
-            <span>{user.sub}</span>
-            <Button
-              variant="outlined"
-              onClick={handleLogout}
-              sx={{ color: 'black', borderColor: 'gray', textTransform: 'none' }}
+          <>
+            <IconButton onClick={handleMenuOpen}>
+              <FaUser />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              PaperProps={{ sx: { mt: 1.5 } }}
             >
-              Logout
-            </Button>
-          </div>
+              <MenuItem disabled>{user.sub}</MenuItem>
+              {user.role === 'ROLE_SUPER_ADMIN' && (
+                <MenuItem
+                  onClick={() => {
+                    setIsRegisterAdminOpen(true);
+                    handleMenuClose();
+                  }}
+                >
+                  Register Admin
+                </MenuItem>
+              )}
+              <MenuItem
+                onClick={() => {
+                  handleLogout();
+                  handleMenuClose();
+                }}
+              >
+                Logout
+              </MenuItem>
+            </Menu>
+          </>
         ) : (
           <Button
             variant="outlined"
@@ -112,7 +134,6 @@ const Header = () => {
           </Button>
         )}
 
-        {/* 🧺 Basket */}
         <Button
           variant="contained"
           startIcon={<FaShoppingBasket />}
@@ -130,7 +151,7 @@ const Header = () => {
         </Button>
       </div>
 
-      {/* 🔐 Login Modal */}
+      {/* Login Modal */}
       <Modal open={isLoginOpen} onClose={() => setIsLoginOpen(false)}>
         <Box
           sx={{
@@ -153,6 +174,38 @@ const Header = () => {
             Cancel
           </Button>
         </Box>
+      </Modal>
+
+      {/* Admin Registration Modal */}
+      <Modal open={isRegisterAdminOpen} onClose={() => setIsRegisterAdminOpen(false)}
+          sx={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }}
+        >
+         <Box
+    sx={{
+      minWidth: 320,
+      maxWidth: '90vw',
+      width: 'fit-content',
+      maxHeight: '90vh',
+      overflowY: 'auto',
+      bgcolor: 'background.paper',
+      p: 4,
+      borderRadius: 2,
+      boxShadow: 24,
+      outline: 'none',
+    }}
+  >
+    <AdminRegistration onSuccess={() => setIsRegisterAdminOpen(false)} />
+    <Button
+      onClick={() => setIsRegisterAdminOpen(false)}
+      sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
+    >
+      Cancel
+    </Button>
+  </Box>
       </Modal>
     </div>
   );

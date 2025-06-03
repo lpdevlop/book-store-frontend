@@ -13,7 +13,7 @@ import Header from './component/header';
 //import Cart from './component/cart'
 import SearchResults from './component/SearchResults';
 import CartPage from './component/CartPage';
-import AdminPanel from './component/AdminPanel';
+import AdminRegistration from './component/AdminRegistration';
 
 // Inside your Routes
 
@@ -43,7 +43,7 @@ const App: React.FC = () => {
         } }/>} /> */}
   <Route path="/search" element={<SearchResults />} />
   <Route path="/cart" element={<CartPage />} />
-  <Route path="/admin" element={<AdminPanel />} />
+  <Route path="/register-admin" element={<AdminRegistration />} />
 
 
       </Routes>
