@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card } from '@mui/material';
+import apiService from '../apiservices/apiService';
 
 interface Book {
   id: number;
@@ -15,18 +16,19 @@ const Topseller = () => {
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/v1/book/top')
-      .then(response => response.json())
-      .then(data => {
-        const booksList = Object.values(data)[0]; // Get the array from the key
-        const booksWithPrices = booksList.map((book: any) => ({
+    apiService
+      .getTopBooks()
+      .then((data) => {
+        // Assuming data has a structure like { someKey: Book[] }
+        const booksList: Book[] = Object.values(data)[0];
+        const booksWithPrices = booksList.map((book) => ({
           ...book,
-          price: book.price ?? 29.99, // fallback default price if null
-          originalPrice: book.price ? book.price + 5 : 34.99 // mock original price
+          price: book.price ?? 29.99,
+          originalPrice: book.price ? book.price + 5 : 34.99,
         }));
         setBooks(booksWithPrices);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching top sellers:', error);
       });
   }, []);
@@ -41,10 +43,10 @@ const Topseller = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-        {books.map((book, idx) => (
-          <Card key={idx} className="p-2">
+        {books.map((book) => (
+          <Card key={book.id} className="p-2">
             <img
-              src="https://blog-cdn.reedsy.com/directories/gallery/248/large_65b0ae90317f7596d6f95bfdd6131398.jpg"
+              src={book.imageUrl || 'https://blog-cdn.reedsy.com/directories/gallery/248/large_65b0ae90317f7596d6f95bfdd6131398.jpg'}
               alt={book.title}
               className="w-full h-48 object-cover rounded"
             />

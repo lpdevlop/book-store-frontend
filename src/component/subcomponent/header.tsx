@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { FaShoppingBasket, FaSearch, FaUser } from 'react-icons/fa';
 import { IconButton, Button, Modal, Box, Menu, MenuItem } from '@mui/material';
 import Login from './login';
 import AdminRegistration from '../subcomponent/AdminRegistration';
+import BookManagment from './bookManagement';
 import { useUser } from './context/userContext';
 
 interface DecodedToken {
@@ -23,14 +23,15 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isRegisterAdminOpen, setIsRegisterAdminOpen] = useState(false);
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false); // Added state
 
   const handleLoginSuccess = (token: string) => {
     try {
       if (user?.role === 'ADMIN') {
-            setIsLoginOpen(false);
+        setIsLoginOpen(false);
         navigate('/admin');
       } else {
-            setIsLoginOpen(false);
+        setIsLoginOpen(false);
         navigate('/');
       }
     } catch (error) {
@@ -89,9 +90,8 @@ const Header = () => {
               onClose={handleMenuClose}
               PaperProps={{ sx: { mt: 1.5 } }}
             >
-              <MenuItem disabled>
-                {user.firstName ? user.firstName:"User"}
-              </MenuItem>
+              <MenuItem disabled>{user.firstName ? user.firstName : "User"}</MenuItem>
+
               {user.role === 'SUPER_ADMIN' && (
                 <MenuItem
                   onClick={() => {
@@ -102,16 +102,18 @@ const Header = () => {
                   Register Admin
                 </MenuItem>
               )}
-            {(user.role === 'SUPER_ADMIN' || 'ADMIN') && (
+
+              {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
                 <MenuItem
                   onClick={() => {
-                    setIsRegisterAdminOpen(true);
+                    setIsBookModalOpen(true); // Open Book Management Modal
                     handleMenuClose();
                   }}
                 >
                   Register Book
                 </MenuItem>
               )}
+
               <MenuItem
                 onClick={() => {
                   handleLogout();
@@ -197,6 +199,38 @@ const Header = () => {
           <AdminRegistration onSuccess={() => setIsRegisterAdminOpen(false)} />
           <Button
             onClick={() => setIsRegisterAdminOpen(false)}
+            sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
+          >
+            Cancel
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* Book Management Modal */}
+      <Modal
+        open={isBookModalOpen}
+        onClose={() => setIsBookModalOpen(false)}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      >
+        <Box
+          sx={{
+            minWidth: 400,
+            maxWidth: '90vw',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            bgcolor: 'background.paper',
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 24,
+            outline: 'none',
+          }}
+        >
+          <BookManagment
+            onClose={() => setIsBookModalOpen(false)}
+            // pass any other props needed for add/update/delete
+          />
+          <Button
+            onClick={() => setIsBookModalOpen(false)}
             sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
           >
             Cancel

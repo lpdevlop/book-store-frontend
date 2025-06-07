@@ -1,5 +1,6 @@
 import axiosInstance, { CustomAxiosRequestConfig } from './axiosInstance';
-import {CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse} from './apiTypes';
+import {CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
+import Topseller from '../subcomponent/topseller';
 
 const apiService = {
   login: (data: LoginRequest) =>
@@ -16,6 +17,9 @@ const apiService = {
 
   registerCutomer: (cutomer:CustomerRegistrationPayload) =>
     axiosInstance.post<{cutomerresponse:CustomerRegistrationResponse }>('/user/create',cutomer,{ skipAuth: true } as CustomAxiosRequestConfig),
+
+  topseller: () =>
+    axiosInstance.get<{topbooks:Books }>('/book/top',{ skipAuth: true } as CustomAxiosRequestConfig),
 
 };
 

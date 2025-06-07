@@ -3,8 +3,8 @@ import { FaSearch, FaHeart, FaUser, FaShoppingBasket } from 'react-icons/fa';
 import './App.css';
 import Headers from './component/subcomponent/header'
 import SearchForm from './component/searchform';
-import Topseller from './component/topseller';
-import Footer from './component/footer';
+import Topseller from './component/subcomponent/topseller';
+import Footer from './component/subcomponent/footer';
 import NewRelease  from './component/newrelease';
 import Recomondation  from './component/recomondation';
 import Login from './component/subcomponent/login';
@@ -13,7 +13,7 @@ import Header from './component/subcomponent/header';
 //import Cart from './component/cart'
 import SearchResults from './component/SearchResults';
 import CartPage from './component/CartPage';
-import AdminRegistration from './component/subcomponent/adminRegistration';
+import AdminRegistration from './component/subcomponent/AdminRegistration';
 
 // Inside your Routes
 

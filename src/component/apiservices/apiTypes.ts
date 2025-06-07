@@ -39,3 +39,13 @@ export interface CustomerRegistrationPayload {
     phoneNumber: string,
     address: string,
 }
+
+export interface Books {
+  id: number;
+  title: string;
+  author: string;
+  price: number | null;
+  originalPrice?: number;
+  imageUrl: string;
+  isAvailable: boolean;
+}
