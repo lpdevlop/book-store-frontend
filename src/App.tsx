@@ -1,15 +1,15 @@
 import { ReactNode } from 'react';
 import { FaSearch, FaHeart, FaUser, FaShoppingBasket } from 'react-icons/fa';
 import './App.css';
-import Headers from './component/header'
+import Headers from './component/subcomponent/header'
 import SearchForm from './component/searchform';
 import Topseller from './component/topseller';
 import Footer from './component/footer';
 import NewRelease  from './component/newrelease';
 import Recomondation  from './component/recomondation';
-import Login from './component/login';
+import Login from './component/subcomponent/login';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Header from './component/header';
+import Header from './component/subcomponent/header';
 //import Cart from './component/cart'
 import SearchResults from './component/SearchResults';
 import CartPage from './component/CartPage';

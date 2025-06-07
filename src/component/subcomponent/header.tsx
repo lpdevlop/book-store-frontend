@@ -1,50 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { FaShoppingBasket, FaSearch, FaUser } from 'react-icons/fa';
 import { IconButton, Button, Modal, Box, Menu, MenuItem } from '@mui/material';
 import Login from './login';
-import AdminRegistration from './AdminRegistration'; // adjust path if needed
+import AdminRegistration from '../AdminRegistration';
+import { useUser } from './context/userContext';
 
 interface DecodedToken {
   sub: string;
   role: string;
+  firstName?: string;
 }
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { user, setUser } = useUser();
+
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [user, setUser] = useState<DecodedToken | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isRegisterAdminOpen, setIsRegisterAdminOpen] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      try {
-        const decoded: DecodedToken = jwtDecode(token);
-        setUser(decoded);
-      } catch (error) {
-        console.error('Invalid token');
-        setUser(null);
-      }
-    } else {
-      setUser(null);
-    }
-  }, [location]);
-
   const handleLoginSuccess = (token: string) => {
     try {
-      const decoded: DecodedToken = jwtDecode(token);
-      localStorage.setItem('authToken', token);
-      setUser(decoded);
-      setIsLoginOpen(false);
-
-      if (decoded.role === 'ROLE_ADMIN') {
+      if (user?.role === 'ADMIN') {
+            setIsLoginOpen(false);
         navigate('/admin');
       } else {
+            setIsLoginOpen(false);
         navigate('/');
       }
     } catch (error) {
@@ -103,8 +89,10 @@ const Header = () => {
               onClose={handleMenuClose}
               PaperProps={{ sx: { mt: 1.5 } }}
             >
-              <MenuItem disabled>{user.sub}</MenuItem>
-              {user.role === 'ROLE_SUPER_ADMIN' && (
+              <MenuItem disabled>
+                {user.firstName ? user.firstName:"User"}
+              </MenuItem>
+              {user.role === 'SUPER_ADMIN' && (
                 <MenuItem
                   onClick={() => {
                     setIsRegisterAdminOpen(true);
@@ -177,35 +165,33 @@ const Header = () => {
       </Modal>
 
       {/* Admin Registration Modal */}
-      <Modal open={isRegisterAdminOpen} onClose={() => setIsRegisterAdminOpen(false)}
+      <Modal
+        open={isRegisterAdminOpen}
+        onClose={() => setIsRegisterAdminOpen(false)}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      >
+        <Box
           sx={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }}
+            minWidth: 320,
+            maxWidth: '90vw',
+            width: 'fit-content',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            bgcolor: 'background.paper',
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 24,
+            outline: 'none',
+          }}
         >
-         <Box
-    sx={{
-      minWidth: 320,
-      maxWidth: '90vw',
-      width: 'fit-content',
-      maxHeight: '90vh',
-      overflowY: 'auto',
-      bgcolor: 'background.paper',
-      p: 4,
-      borderRadius: 2,
-      boxShadow: 24,
-      outline: 'none',
-    }}
-  >
-    <AdminRegistration onSuccess={() => setIsRegisterAdminOpen(false)} />
-    <Button
-      onClick={() => setIsRegisterAdminOpen(false)}
-      sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
-    >
-      Cancel
-    </Button>
-  </Box>
+          <AdminRegistration onSuccess={() => setIsRegisterAdminOpen(false)} />
+          <Button
+            onClick={() => setIsRegisterAdminOpen(false)}
+            sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
+          >
+            Cancel
+          </Button>
+        </Box>
       </Modal>
     </div>
   );

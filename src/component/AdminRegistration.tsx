@@ -18,7 +18,7 @@ const AdminRegistration: React.FC<AdminRegistrationProps> = ({ onSuccess }) => {
     try {
       const token = localStorage.getItem('authToken');
       await axios.post(
-        'http://localhost:8080/api/admin/create',
+        'http://localhost:8080/api/v1/admin',
         form,
         {
           headers: {
@@ -53,18 +53,6 @@ const AdminRegistration: React.FC<AdminRegistrationProps> = ({ onSuccess }) => {
               />
             </div>
           ))}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Role</label>
-            <select
-              name="role"
-              value={form.role}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg text-black bg-white"
-            >
-              <option value="ADMIN">Admin</option>
-              <option value="MODERATOR">Moderator</option>
-            </select>
-          </div>
           <button
             type="submit"
             className="w-full bg-yellow-600 text-white py-2 rounded-lg hover:bg-yellow-700"
