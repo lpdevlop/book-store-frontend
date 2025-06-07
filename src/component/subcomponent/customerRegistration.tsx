@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
+import apiService from '../apiservices/apiService';
 
 type CustomerRegistrationProps = {
   onSuccess?: () => void;
@@ -60,8 +61,7 @@ const CustomerRegistration: React.FC<CustomerRegistrationProps> = ({ onSuccess, 
         phoneNumber: form.phone,
         address: form.address,
       };
-
-      await axios.post('http://localhost:8080/api/v1/user/create', payload);
+      const response=apiService.registerCutomer(payload)
       setMessage('✅ Customer registered successfully.');
       setForm({ firstName: '', lastName: '', email: '', password: '', phone: '', address: '' });
       if (onSuccess) onSuccess();

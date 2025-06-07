@@ -13,7 +13,7 @@ import Header from './component/subcomponent/header';
 //import Cart from './component/cart'
 import SearchResults from './component/SearchResults';
 import CartPage from './component/CartPage';
-import AdminRegistration from './component/AdminRegistration';
+import AdminRegistration from './component/subcomponent/adminRegistration';
 
 // Inside your Routes
 

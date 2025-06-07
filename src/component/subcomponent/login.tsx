@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import CustomerRegistration from '../CustomerRegistration';
+import CustomerRegistration from './customerRegistration';
 import apiService from '../apiservices/apiService';
 import { useUser } from './context/userContext';
 import { jwtDecode } from 'jwt-decode';

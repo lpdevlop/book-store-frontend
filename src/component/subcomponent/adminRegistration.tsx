@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import apiService from '../apiservices/apiService';
 
 type AdminRegistrationProps = {
   onSuccess?: () => void;
 };
 
 const AdminRegistration: React.FC<AdminRegistrationProps> = ({ onSuccess }) => {
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'ADMIN' });
+  const [form, setForm] = useState({ firstName: '', email: '', password: ''});
   const [message, setMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -15,19 +15,10 @@ const AdminRegistration: React.FC<AdminRegistrationProps> = ({ onSuccess }) => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const token = localStorage.getItem('authToken');
-      await axios.post(
-        'http://localhost:8080/api/v1/admin',
-        form,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    try {     
+     const response =apiService.registerAdmin(form)
       setMessage('Admin registered successfully.');
-      setForm({ name: '', email: '', password: '', role: 'ADMIN' });
+      setForm({ firstName: '', email: '', password: ''});
       if (onSuccess) onSuccess();
     } catch (error) {
       setMessage('Failed to register admin.');

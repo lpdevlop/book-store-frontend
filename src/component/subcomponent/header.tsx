@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { FaShoppingBasket, FaSearch, FaUser } from 'react-icons/fa';
 import { IconButton, Button, Modal, Box, Menu, MenuItem } from '@mui/material';
 import Login from './login';
-import AdminRegistration from '../AdminRegistration';
+import AdminRegistration from '../subcomponent/AdminRegistration';
 import { useUser } from './context/userContext';
 
 interface DecodedToken {
@@ -100,6 +100,16 @@ const Header = () => {
                   }}
                 >
                   Register Admin
+                </MenuItem>
+              )}
+            {(user.role === 'SUPER_ADMIN' || 'ADMIN') && (
+                <MenuItem
+                  onClick={() => {
+                    setIsRegisterAdminOpen(true);
+                    handleMenuClose();
+                  }}
+                >
+                  Register Book
                 </MenuItem>
               )}
               <MenuItem
