@@ -12,8 +12,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './component/subcomponent/header';
 //import Cart from './component/cart'
 import SearchResults from './component/SearchResults';
-import CartPage from './component/subcomponent/CartPage';
-import CheckoutPage from './component/subcomponent/CheckoutPage'
+import CartPage from './component/subcomponent/cart/CartPage';
+import CheckoutPage from './component/subcomponent/cart/CheckoutPage'
 import AdminRegistration from './component/subcomponent/AdminRegistration';
 // Inside your Routes
 
@@ -24,31 +24,14 @@ const App: React.FC = () => {
   return (
     <div className="font-sans text-gray-800">
       {!hideHeaderFooter && <Header />}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <NewRelease />
-              <Topseller />
-              <Recomondation />
-            </>
-          }
-        />
-        <Route path="/login" element={<Login />} />
-  {/*       <Route path="/cart" element={<Cart cart={[]} onQtyChange={function (id: number, qty: number): void {
-          throw new Error('Function not implemented.');
-        } } onRemove={function (id: number): void {
-          throw new Error('Function not implemented.');
-        } }/>} /> */}
+  <Routes>
+  <Route path="/" element={<><NewRelease /><Topseller /><Recomondation /></>}/>
+  <Route path="/login" element={<Login />} />
   <Route path="/search" element={<SearchResults />} />
   <Route path="/cart" element={<CartPage />} />
   <Route path="/checkout" element={<CheckoutPage />} />
   <Route path="/register-admin" element={<AdminRegistration />} />
-
-
-      </Routes>
-
+  </Routes>
       {!hideHeaderFooter && <Footer />}
     </div>
   );

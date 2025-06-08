@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import { useCart } from './subcomponent/cart';
+import { useCart } from './subcomponent/cart/cart';
 
 const SearchResults = () => {
   const location = useLocation();
