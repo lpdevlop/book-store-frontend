@@ -1,54 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { useCart } from './subcomponent/cart/cart';
+import apiService from './apiservices/apiService';
+import { PaginatedResponse, Books } from './apiservices/apiTypes';
 
-const SearchResults = () => {
+const SearchResults: React.FC = () => {
   const location = useLocation();
-  const query = new URLSearchParams(location.search).get('q');
+  const query = new URLSearchParams(location.search).get('q') || '';
 
   const { addToCart } = useCart();
 
-  const [results, setResults] = useState<any[]>([]);
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const size = 12; // Items per page
-  const [loading, setLoading] = useState(false);
+  const [results, setResults]         = useState<Books[]>([]);
+  const [page, setPage]               = useState<number>(0);
+  const [totalPages, setTotalPages]   = useState<number>(1);
+  const [loading, setLoading]         = useState<boolean>(false);
+  const size = 12; // items per page
 
-  const fetchSearchResults = async () => {
-    if (!query) return;
-    setLoading(true);
+  // Reset to first page when the query changes
+  useEffect(() => {
+    setPage(0);
+  }, [query]);
 
-    const payload = {
-      title: query,
-      author: null,
-      isbn: null,
-      description: null,
-      page,
-      size
+  // Fetch whenever `query` or `page` changes
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (!query) {
+        setResults([]);
+        setTotalPages(1);
+        return;
+      }
+      setLoading(true);
+
+      try {
+        const response = await apiService.searchBooks({
+          title:query,
+          page,
+          size
+        });
+        const pageData =response.data;
+        setResults(pageData.book_searched_successfully.content);
+        setTotalPages(pageData.book_searched_successfully.totalPages);
+      } catch (error) {
+        console.error('Search error:', error);
+        setResults([]);
+        setTotalPages(1);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    try {
-      const response = await axios.post('http://localhost:8080/api/v1/book/search', payload);
-      const data = response.data;
-
-      setResults(data.content || []);
-      setTotalPages(data.totalPages || 1);
-    } catch (error) {
-      console.error('Search error:', error);
-      setResults([]);
-      setTotalPages(1);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
     fetchSearchResults();
   }, [query, page]);
 
-  const handleAddToCart = (book: any) => {
+  const handleAddToCart = (book: Books) => {
     addToCart(book);
   };
 
@@ -60,29 +65,45 @@ const SearchResults = () => {
 
   return (
     <div className="p-6">
-      <h5 className="text-xl font-bold mb-4">Search Results for: "{query}"</h5>
+      <h5 className="text-xl font-bold mb-4">
+        Search Results for: “{query}”
+      </h5>
 
       {loading ? (
-        <p>Loading...</p>
+        <p>Loading…</p>
       ) : results.length === 0 ? (
         <p>No books found.</p>
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {results.map((book) => (
-              <div key={book.id} className="border rounded p-2 shadow flex flex-col h-[320px]">
-                <img src={book.imageUrl} alt={book.title} className="w-full h-28 object-cover rounded" />
-                <h2 className="text-sm font-semibold mt-2 line-clamp-1">{book.title}</h2>
-                <p className="text-xs text-gray-600 line-clamp-1">{book.author}</p>
-                <p className="text-xs line-clamp-1">{book.genre} | {book.format}</p>
-                <p className="text-xs mb-2">{book.isAvailable ? 'Available' : 'Out of Stock'}</p>
+              <div
+                key={book.id}
+                className="border rounded p-2 shadow flex flex-col h-[320px]"
+              >
+                <img
+                  src={book.imageUrl}
+                  alt={book.title}
+                  className="w-full h-28 object-cover rounded"
+                />
+                <h2 className="text-sm font-semibold mt-2 line-clamp-1">
+                  {book.title}
+                </h2>
+                <p className="text-xs text-gray-600 line-clamp-1">
+                  {book.author}
+                </p>
+                <p className="text-xs line-clamp-1">
+                  {book.genre} | {book.format}
+                </p>
+                <p className="text-xs mb-2">
+                  {book.isAvailable ? 'Available' : 'Out of Stock'}
+                </p>
                 <div className="mt-auto">
                   <Button
                     variant="contained"
-                    color="primary"
                     fullWidth
                     size="small"
-                    disabled={!book.isAvailable}
+                    disabled={!book.isAvailable || loading}
                     onClick={() => handleAddToCart(book)}
                   >
                     Add to Cart
@@ -97,15 +118,17 @@ const SearchResults = () => {
             <Button
               variant="outlined"
               onClick={() => handlePageChange(page - 1)}
-              disabled={page === 0}
+              disabled={page === 0 || loading}
             >
               Previous
             </Button>
-            <span className="px-3 py-1">{`Page ${page + 1} of ${totalPages}`}</span>
+            <span className="px-3 py-1">
+              Page {page + 1} of {totalPages}
+            </span>
             <Button
               variant="outlined"
               onClick={() => handlePageChange(page + 1)}
-              disabled={page + 1 >= totalPages}
+              disabled={page + 1 >= totalPages || loading}
             >
               Next
             </Button>

@@ -1,5 +1,5 @@
 import axiosInstance, { CustomAxiosRequestConfig } from './axiosInstance';
-import {CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
+import {PaginatedResponse,BooksSearch,CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
 import Topseller from '../subcomponent/topseller';
 
 const apiService = {
@@ -32,6 +32,10 @@ const apiService = {
 
   deactivateBook: (id: number) =>
     axiosInstance.put(`/book/${id}/status`),
+
+  searchBooks: ( bookseach:BooksSearch) =>
+    axiosInstance.post<{book_searched_successfully:PaginatedResponse<Books> }>(`book/search`,bookseach,{ skipAuth: true } as CustomAxiosRequestConfig),
+
 };
 
 

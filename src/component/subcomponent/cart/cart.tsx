@@ -4,10 +4,19 @@ interface Book {
   id: number;
   title: string;
   author: string;
-  imageUrl: string;
+  isbn: string;
+  publisher?: string;
+  publicationDate?: string;
   price?: number;
+  language?: string;
+  genre?: string;
+  stockQuantity?: number;
+  description?: string;
+  averageRating?: number;
+  pageCount?: number;
+  format?: string;
+  imageUrl?: string;
   isAvailable: boolean;
-  [key: string]: any;
 }
 // 1) Define your props interface
 

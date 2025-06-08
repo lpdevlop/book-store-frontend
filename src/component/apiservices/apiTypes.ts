@@ -59,3 +59,19 @@ export interface Books {
   isAvailable: boolean;
 }
 
+export interface BooksSearch{
+  
+    title: string
+    page: number,
+    size: number
+}
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  last: boolean;
+}
+
