@@ -1,8 +1,4 @@
-import { ReactNode } from 'react';
-import { FaSearch, FaHeart, FaUser, FaShoppingBasket } from 'react-icons/fa';
 import './App.css';
-import Headers from './component/subcomponent/header'
-import SearchForm from './component/searchform';
 import Topseller from './component/subcomponent/topseller';
 import Footer from './component/subcomponent/footer';
 import NewRelease  from './component/subcomponent/newrelease';
@@ -14,10 +10,6 @@ import CartPage from './component/subcomponent/cart/CartPage'
 import SearchResults from './component/subcomponent/SearchResults';
 import CheckoutPage from './component/subcomponent/cart/CheckoutPage'
 import AdminRegistration from './component/subcomponent/adminRegistration';
-import { CartProvider } from './component/subcomponent/cart/cart';
-import { useCart }  from './component/subcomponent/cart/cart';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
 
 const App: React.FC = () => {
   const location = useLocation();
