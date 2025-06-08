@@ -7,7 +7,7 @@ interface ButtonProps {
     className?: string;
     [key: string]: any; // Allowing any other props for Button
   }
-  
+
   const Button = ({ children, className = '', ...props }: ButtonProps) => {
     return (
       <button
@@ -47,13 +47,13 @@ const CheckoutForm = () => {
       </div>
     );
   };
-  
+
   // Input Component
   interface InputProps {
     className?: string;
     [key: string]: any; // Allowing any other props for Input
   }
-  
+
   const Input = ({ className = '', ...props }: InputProps) => {
     return (
       <input
@@ -62,6 +62,5 @@ const CheckoutForm = () => {
       />
     );
   };
-  
+
   export default CheckoutForm;
-  

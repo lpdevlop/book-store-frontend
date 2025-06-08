@@ -1,11 +1,20 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import { useCart } from './cart';
+import { useNavigate } from 'react-router-dom';
 
-const CartPage = () => {
-  const { cartItems } = useCart();
+type Props = {
+  children?: ReactNode; // <-- Accepts children
+};
+
+const CartPage = ({ children }: Props) => {
+  const navigate = useNavigate();
+  const { cartItems, updateQty, removeFromCart } = useCart();
 
   const getSubtotal = () => {
-    return cartItems.reduce((sum, book) => sum + (book.price || 0), 0);
+    return cartItems.reduce(
+      (sum, item) => sum + (item.price || 0) * item.quantity,
+      0
+    );
   };
 
   return (
@@ -21,20 +30,41 @@ const CartPage = () => {
                 <th className="py-2">Price</th>
                 <th className="py-2">Qty</th>
                 <th className="py-2">Subtotal</th>
+                <th className="py-2"></th>
               </tr>
             </thead>
             <tbody>
-              {cartItems.map((book) => (
-                <tr key={book.id} className="border-b">
+              {cartItems.map((item) => (
+                <tr key={item.id} className="border-b">
                   <td className="py-4 flex gap-4 items-center">
-                    <img src={book.imageUrl} alt={book.title} className="w-20 h-28 object-cover border" />
-                    <span className="text-blue-600 underline">{book.title}</span>
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="w-20 h-28 object-cover border"
+                    />
+                    <span className="text-blue-600 underline">{item.title}</span>
                   </td>
-                  <td>රු {book.price?.toLocaleString()}</td>
+                  <td>රු {item.price?.toLocaleString()}</td>
                   <td>
-                    <input type="number" value={1} readOnly className="w-12 border rounded text-center" />
+                    <input
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        updateQty(item.id, Number(e.target.value))
+                      }
+                      className="w-12 border rounded text-center"
+                      min={1}
+                    />
                   </td>
-                  <td>රු {book.price?.toLocaleString()}</td>
+                  <td>රු {((item.price || 0) * item.quantity).toLocaleString()}</td>
+                  <td>
+                    <button
+                      className="text-red-500"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      Remove
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -70,7 +100,10 @@ const CartPage = () => {
             <input type="text" className="mt-1 border rounded w-full px-2 py-1 text-sm" />
           </div>
 
-          <button className="mt-6 w-full bg-black text-white py-2 rounded hover:bg-gray-800">
+          <button
+            className="mt-6 w-full bg-black text-white py-2 rounded hover:bg-gray-800"
+            onClick={() => navigate('/checkout')}
+          >
             PROCEED TO CHECKOUT
           </button>
         </div>

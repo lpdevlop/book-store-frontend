@@ -12,9 +12,9 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './component/subcomponent/header';
 //import Cart from './component/cart'
 import SearchResults from './component/SearchResults';
-import CartPage from './component/CartPage';
+import CartPage from './component/subcomponent/CartPage';
+import CheckoutPage from './component/subcomponent/CheckoutPage'
 import AdminRegistration from './component/subcomponent/AdminRegistration';
-
 // Inside your Routes
 
 const App: React.FC = () => {
@@ -43,6 +43,7 @@ const App: React.FC = () => {
         } }/>} /> */}
   <Route path="/search" element={<SearchResults />} />
   <Route path="/cart" element={<CartPage />} />
+  <Route path="/checkout" element={<CheckoutPage />} />
   <Route path="/register-admin" element={<AdminRegistration />} />
 
 
