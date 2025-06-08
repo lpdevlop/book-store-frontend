@@ -10,12 +10,13 @@ import Recomondation  from './component/recomondation';
 import Login from './component/subcomponent/login';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './component/subcomponent/header';
-//import Cart from './component/cart'
+import CartPage from './component/subcomponent/cart/CartPage'
 import SearchResults from './component/SearchResults';
-import CartPage from './component/subcomponent/cart/CartPage';
 import CheckoutPage from './component/subcomponent/cart/CheckoutPage'
-import AdminRegistration from './component/subcomponent/AdminRegistration';
-// Inside your Routes
+import AdminRegistration from './component/subcomponent/adminRegistration';
+import { CartProvider } from './component/subcomponent/cart/cart';
+import { useCart }  from './component/subcomponent/cart/cart';
+
 
 const App: React.FC = () => {
   const location = useLocation();

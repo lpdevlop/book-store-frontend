@@ -9,6 +9,8 @@ interface Book {
   isAvailable: boolean;
   [key: string]: any;
 }
+// 1) Define your props interface
+
 
 export type CartItem = Book & { quantity: number };
 
@@ -24,13 +26,17 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const useCart = () => {
   const context = useContext(CartContext);
+    console.log("useCart() context:", context);
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
 };
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+interface CartProviderProps {
+  children: React.ReactNode;       // ← explicitly declare children
+}
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const addToCart = (book: Book) => {
@@ -61,6 +67,3 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     </CartContext.Provider>
   );
 };
-
-// If needed:
-// export default CartProvider;  // Optional, only if you want default export

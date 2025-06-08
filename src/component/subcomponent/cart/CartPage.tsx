@@ -1,12 +1,9 @@
-import { ReactNode } from 'react';
 import { useCart } from './cart';
 import { useNavigate } from 'react-router-dom';
 
-type Props = {
-  children?: ReactNode; // <-- Accepts children
-};
 
-const CartPage = ({ children }: Props) => {
+
+const CartPage = () => {
   const navigate = useNavigate();
   const { cartItems, updateQty, removeFromCart } = useCart();
 

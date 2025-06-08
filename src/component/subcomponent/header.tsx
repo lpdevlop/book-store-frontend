@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FaShoppingBasket, FaSearch, FaUser } from 'react-icons/fa';
 import { IconButton, Button, Modal, Box, Menu, MenuItem } from '@mui/material';
 import Login from './login';
-import AdminRegistration from '../subcomponent/AdminRegistration';
+import AdminRegistration from '../subcomponent/adminRegistration';
 import BookManagment from './bookManagement';
 import { useUser } from './context/userContext';
 
