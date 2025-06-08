@@ -44,8 +44,18 @@ export interface Books {
   id: number;
   title: string;
   author: string;
-  price: number | null;
-  originalPrice?: number;
-  imageUrl: string;
+  isbn: string;
+  publisher?: string;
+  publicationDate?: string;
+  price?: number;
+  language?: string;
+  genre?: string;
+  stockQuantity?: number;
+  description?: string;
+  averageRating?: number;
+  pageCount?: number;
+  format?: string;
+  imageUrl?: string;
   isAvailable: boolean;
 }
+

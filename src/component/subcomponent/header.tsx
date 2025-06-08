@@ -226,7 +226,6 @@ const Header = () => {
           }}
         >
           <BookManagment
-            onClose={() => setIsBookModalOpen(false)}
             // pass any other props needed for add/update/delete
           />
           <Button
