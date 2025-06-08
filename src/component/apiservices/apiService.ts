@@ -21,6 +21,17 @@ const apiService = {
   topseller: () =>
     axiosInstance.get<{topbooks:Books }>('/book/top',{ skipAuth: true } as CustomAxiosRequestConfig),
 
+  searchBookByIsbn: (isbn: string) =>
+    axiosInstance.get<{book_searched_successfully: Books}>(`/book/isbn/${isbn}`),
+
+  addBook: (book: Partial<Books>) =>
+    axiosInstance.post('/book', book),
+
+  updateBook: (book: Partial<Books>) =>
+    axiosInstance.post(`/book`, book),
+
+  deactivateBook: (id: number) =>
+    axiosInstance.put(`/book/${id}/status`),
 };
 
 
