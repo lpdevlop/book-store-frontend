@@ -5,18 +5,19 @@ import Headers from './component/subcomponent/header'
 import SearchForm from './component/searchform';
 import Topseller from './component/subcomponent/topseller';
 import Footer from './component/subcomponent/footer';
-import NewRelease  from './component/newrelease';
-import Recomondation  from './component/recomondation';
+import NewRelease  from './component/subcomponent/newrelease';
+import Recomondation  from './component/subcomponent/recomondation';
 import Login from './component/subcomponent/login';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './component/subcomponent/header';
 import CartPage from './component/subcomponent/cart/CartPage'
-import SearchResults from './component/SearchResults';
+import SearchResults from './component/subcomponent/SearchResults';
 import CheckoutPage from './component/subcomponent/cart/CheckoutPage'
 import AdminRegistration from './component/subcomponent/adminRegistration';
 import { CartProvider } from './component/subcomponent/cart/cart';
 import { useCart }  from './component/subcomponent/cart/cart';
-
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
 
 const App: React.FC = () => {
   const location = useLocation();

@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import apiService from '../apiservices/apiService';
 
 interface Book {
   title: string;
@@ -25,9 +26,10 @@ const Button = ({ children, className = '', ...props }: any) => (
 const NewRelease = () => {
   const [books, setBooks] = useState<Book[]>([]);
 
+  const data=apiService.newRelease();
   useEffect(() => {
-    fetch('http://localhost:8080/api/v1/book/latest')
-      .then((res) => res.json())
+    data
+      .then((res) => res.data)
       .then((data) => {
         const bookArray = Object.values(data)[0] as any[];
         const formattedBooks = bookArray.map((book) => ({
