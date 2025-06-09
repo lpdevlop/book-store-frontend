@@ -1,5 +1,5 @@
 import axiosInstance, { CustomAxiosRequestConfig } from './axiosInstance';
-import {PaginatedResponse,BooksSearch,CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
+import {OrderPayload,PaginatedResponse,BooksSearch,CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
 import Topseller from '../subcomponent/topseller';
 import NewRelease from '../subcomponent/newrelease';
 
@@ -43,6 +43,8 @@ const apiService = {
   recomondedBooks: () =>
     axiosInstance.get('/book/recommendations',{ skipAuth: true } as CustomAxiosRequestConfig),
 
+  makeOrder: (order:OrderPayload) =>
+    axiosInstance.post<{cutomerresponse:CustomerRegistrationResponse }>('/api/v1/order',order),
 
 
 };

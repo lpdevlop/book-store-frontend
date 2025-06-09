@@ -75,3 +75,28 @@ export interface PaginatedResponse<T> {
   last: boolean;
 }
 
+export interface Items{
+   orderQuantity:number,
+   id:number
+}
+
+export interface OrderPayload {
+    items: Items[]; 
+    quantity:number;                 
+    totalAmount: number;              
+    paymentMethod: string;             
+    paymentStatus: string;             
+    orderStatus: string;               
+    couponCode?: string;               
+    discount?: number;                 
+    finalAmount: number;               
+    trackingNumber?: string;           
+    shippingMethod: string;            
+    firstName: string;
+    lastName: string;
+    streetAddress: string;
+    city: string;
+    zip: string;
+    country: string;
+    province: string;
+}

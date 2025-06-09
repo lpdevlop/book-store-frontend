@@ -1,7 +1,24 @@
 import React, { useState } from 'react';
+export interface ShippingData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  company: string;
+  address: string;
+  country: string;
+  state: string;
+  city: string;
+  zip: string;
+  phone: string;
+  shippingMethod: string;
+}
+interface ShippingFormProps {
+  onChange?: (data: ShippingData) => void;
+}
+const ShippingForm: React.FC<ShippingFormProps> = ({ onChange }) => {
+  const [formData, setFormData] = useState<ShippingData>({
 
-const ShippingForm = () => {
-  const [formData, setFormData] = useState({
+    
     email: '',
     firstName: '',
     lastName: '',
@@ -24,6 +41,9 @@ const ShippingForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    const updated = { ...formData, [e.target.name]: e.target.value };
+    setFormData(updated);
+    onChange?.(updated);
   };
 
   return (
