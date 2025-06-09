@@ -54,6 +54,7 @@ const SearchResults: React.FC = () => {
   }, [query, page]);
 
   const handleAddToCart = (book: Books) => {
+    console.log("sssssssssss",book);
     addToCart(book);
   };
 

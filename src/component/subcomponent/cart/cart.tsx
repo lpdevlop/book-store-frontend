@@ -21,7 +21,15 @@ interface Book {
 // 1) Define your props interface
 
 
-export type CartItem = Book & { quantity: number };
+export type CartItem = {
+  id: number;
+  title: string;
+  author: string;
+  price: number;          // now required
+  imageUrl?: string;
+  isAvailable: boolean;
+  quantity: number;
+};
 
 export interface CartContextType {
   cartItems: CartItem[];
@@ -52,7 +60,15 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setCartItems((prevItems) => {
       const existing = prevItems.find((item) => item.id === book.id);
       if (existing) return prevItems;
-      return [...prevItems, { ...book, quantity: 1 }];
+      return [...prevItems,  {
+          id: book.id,
+          title: book.title,
+          author: book.author,
+          imageUrl: book.imageUrl,
+          isAvailable: book.isAvailable,
+          price: book.price != null ? book.price : 12,
+          quantity: 1,
+        }];
     });
   };
 
