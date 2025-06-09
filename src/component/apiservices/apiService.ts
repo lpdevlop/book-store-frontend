@@ -44,7 +44,7 @@ const apiService = {
     axiosInstance.get('/book/recommendations',{ skipAuth: true } as CustomAxiosRequestConfig),
 
   makeOrder: (order:OrderPayload) =>
-    axiosInstance.post<{cutomerresponse:CustomerRegistrationResponse }>('/api/v1/order',order),
+    axiosInstance.post<{cutomerresponse:CustomerRegistrationResponse }>('/order',order),
 
 
 };

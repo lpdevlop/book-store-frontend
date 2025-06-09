@@ -19,19 +19,48 @@ const CheckoutPage = () => {
   };
 
 
-  const handlePaymentSuccess = (card: CardData) => {
-    const order = {
-      items: cartItems,
-      total,
-      shipping,
-      card,
-      date: new Date().toISOString(),
+  const handlePaymentSuccess = async (card: CardData) => {
+    if (!shipping) return;
+
+    const payload: OrderPayload = {
+      items: cartItems.map((item) => ({
+        id: item.id,
+        orderQuantity: item.quantity,
+      })),
+      quantity: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+      totalAmount: total,
+      paymentMethod: 'CARD',
+      paymentStatus: 'PAID',
+      orderStatus: 'PLACED',
+      finalAmount: total,
+      shippingMethod: shipping.shippingMethod,
+      firstName: shipping.firstName,
+      lastName: shipping.lastName,
+      streetAddress: shipping.address,
+      city: shipping.city,
+      zip: shipping.zip,
+      country: shipping.country,
+      province: shipping.state,
     };
-    localStorage.setItem('latestOrder', JSON.stringify(order));
-    setPlaced(true);
-    clearCart();
+    try {
+          console.log('Submitting order!');
+      await apiService.makeOrder(payload);
+      const order = {
+        items: cartItems,
+        total,
+        shipping,
+        card,
+        date: new Date().toISOString(),
+      };
+      localStorage.setItem('latestOrder', JSON.stringify(order));
+      console.error('place order', JSON.stringify(order));
+
+      setPlaced(true);
+      clearCart();
+    } catch (error) {
+      console.error('Failed to place order', error);
+    }
   };
-  
 
   if (placed) {
     return (
