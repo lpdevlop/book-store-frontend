@@ -112,7 +112,7 @@ export interface Order {
   id: number;
   orderDate: string;
   totalAmount: number;
-  items: OrderItem[];
+  items: OrderItem[] | null;
   orderStatus?: string;
   trackingNumber:number;
   shippingMethod:string;

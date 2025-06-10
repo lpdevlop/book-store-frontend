@@ -8,36 +8,25 @@ const OrdersPage: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        let response;
+useEffect(() => {
+  const fetchOrders = async () => {
+    try {
+      let list: Order[] = []
 
-        if (user?.role === 'ADMIN') {
-          response = await apiService.getAllOrders();
-                    console.log(response)
-        } else if (user?.role === 'CUSTOMER') {
-          response = await apiService.getMyOrders();
-                  console.log('ssssssssssssssssssss:', response);
-        } else {
-          response = { data: [] };
-        }
-
-        console.log('API response:', response);
-
-        if (Array.isArray(response?.data)) {
-          setOrders(response.data);
-        } else {
-          setOrders([]);
-        }
-      } catch (err) {
-        console.error('Fetch error:', err);
-        setError('Failed to fetch orders');
+      if (user?.role === 'ADMIN') {
+        list = (await apiService.getAllOrders()).data.data
+      } else if (user?.role === 'CUSTOMER') {
+        list = (await apiService.getMyOrders()).data.data
       }
-    };
+      setOrders(list)
+    } catch (err) {
+      console.error(err)
+      setError('Failed to fetch orders')
+    }
+  }
+  fetchOrders()
+}, [user])
 
-    fetchOrders();
-  }, [user]);
 
   return (
     <div className="p-8">
@@ -46,9 +35,11 @@ const OrdersPage: React.FC = () => {
       </h2>
 
       {error && <p className="text-red-500">{error}</p>}
-      {!orders.length && !error && <p className="text-gray-500">No orders found.</p>}
+      {!orders.length && !error && (
+        <p className="text-gray-500">No orders found.</p>
+      )}
 
-      {!!orders.length && (
+      {orders.length > 0 && (
         <table className="w-full border mt-4">
           <thead>
             <tr className="border-b text-left">
@@ -65,18 +56,22 @@ const OrdersPage: React.FC = () => {
                 <td className="p-2">{o.trackingNumber ?? 'N/A'}</td>
                 <td className="p-2">{o.shippingMethod ?? 'Unknown'}</td>
                 <td className="p-2">{o.paymentMethod ?? 'N/A'}</td>
-                <td className="p-2">{o.totalAmount?.toFixed(2) ?? '0.00'}</td>
-                <td className="p-2">{Array.isArray(o.items) ? o.items.length : 0}</td>
+                <td className="p-2">
+                  {o.totalAmount?.toFixed(2) ?? '0.00'}
+                </td>
+                <td className="p-2">
+                  {Array.isArray(o.items) ? o.items.length : 0}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      <pre className="mt-4 bg-gray-100 p-4 rounded text-sm">
+ {/*      <pre className="mt-4 bg-gray-100 p-4 rounded text-sm">
         Debug Data:
         {JSON.stringify(orders, null, 2)}
-      </pre>
+      </pre> */}
     </div>
   );
 };
