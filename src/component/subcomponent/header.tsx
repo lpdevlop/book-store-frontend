@@ -102,6 +102,16 @@ const Header = () => {
                   Register Admin
                 </MenuItem>
               )}
+        {(user.role === 'ADMIN' || user.role === 'CUSTOMER') && (
+  <MenuItem
+    onClick={() => {
+      navigate('/orders');
+      handleMenuClose();
+    }}
+  >
+    {user.role === 'ADMIN' ? 'All Orders' : 'My Orders'}
+  </MenuItem>
+)}
 
               {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
                 <MenuItem

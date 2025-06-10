@@ -1,5 +1,5 @@
 import axiosInstance, { CustomAxiosRequestConfig } from './axiosInstance';
-import {OrderPayload,PaginatedResponse,BooksSearch,CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
+import {Order,OrderPayload,PaginatedResponse,BooksSearch,CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
 import Topseller from '../subcomponent/topseller';
 import NewRelease from '../subcomponent/newrelease';
 
@@ -46,6 +46,11 @@ const apiService = {
   makeOrder: (order:OrderPayload) =>
     axiosInstance.post<{cutomerresponse:CustomerRegistrationResponse }>('/order',order),
 
+  getAllOrders: () =>
+    axiosInstance.get<{data:Order }>('/order'),
+
+  getMyOrders: () =>
+    axiosInstance.get<{data:Order }>('/order/my')
 
 };
 

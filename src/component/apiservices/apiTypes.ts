@@ -100,3 +100,21 @@ export interface OrderPayload {
     country: string;
     province: string;
 }
+
+export interface OrderItem {
+  id: number;
+  title: string;
+  quantity: number;
+  price: number;
+}
+
+export interface Order {
+  id: number;
+  orderDate: string;
+  totalAmount: number;
+  items: OrderItem[];
+  orderStatus?: string;
+  trackingNumber:number;
+  shippingMethod:string;
+  paymentMethod:string
+}
