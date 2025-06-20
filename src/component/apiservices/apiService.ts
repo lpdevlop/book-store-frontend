@@ -1,7 +1,5 @@
 import axiosInstance, { CustomAxiosRequestConfig } from './axiosInstance';
 import {Order,OrderPayload,PaginatedResponse,BooksSearch,CustomerRegistrationPayload,CustomerRegistrationResponse, AdminRegPayload, LoginRequest, TokenResponse, UserProfile ,UserProfilePayload,UserRegistrationResponse, Books} from './apiTypes';
-import Topseller from '../subcomponent/topseller';
-import NewRelease from '../subcomponent/newrelease';
 
 const apiService = {
   login: (data: LoginRequest) =>

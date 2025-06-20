@@ -116,7 +116,7 @@ const Header = () => {
               {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
                 <MenuItem
                   onClick={() => {
-                    setIsBookModalOpen(true); // Open Book Management Modal
+                    setIsBookModalOpen(true); 
                     handleMenuClose();
                   }}
                 >
@@ -236,7 +236,6 @@ const Header = () => {
           }}
         >
           <BookManagment
-            // pass any other props needed for add/update/delete
           />
           <Button
             onClick={() => setIsBookModalOpen(false)}

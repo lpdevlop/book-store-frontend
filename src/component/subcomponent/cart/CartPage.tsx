@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCart } from './cart';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/userContext';
@@ -18,7 +17,6 @@ const CartPage = () => {
     }
   };
 
-  // Ensure price is always a number
   const getSubtotal = () =>
     cartItems.reduce(
       (sum, item) => sum + ((item.price ?? DEFAULT_PRICE) * item.quantity),
@@ -26,7 +24,6 @@ const CartPage = () => {
     );
 
 
-  // Utility for consistent formatting
   const fmt = (value: number) =>
     value.toLocaleString('si-LK', {
       minimumFractionDigits: 2,
@@ -94,7 +91,6 @@ const CartPage = () => {
           </table>
         </div>
 
-        {/* --- Summary --- */}
         <div className="w-full lg:w-1/3 bg-white shadow p-6 rounded">
           <h2 className="text-xl font-bold mb-4">SUMMARY</h2>
           <div className="text-sm border-t pt-2 space-y-2">

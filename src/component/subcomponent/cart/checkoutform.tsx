@@ -48,10 +48,9 @@ const CheckoutForm = () => {
     );
   };
 
-  // Input Component
   interface InputProps {
     className?: string;
-    [key: string]: any; // Allowing any other props for Input
+    [key: string]: any; 
   }
 
   const Input = ({ className = '', ...props }: InputProps) => {

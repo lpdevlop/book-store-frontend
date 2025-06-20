@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import React, { createContext, useContext, useState, ReactNode,useEffect } from 'react';
+import apiService from '../../apiservices/apiService';
 
 type UserProfile = {
   email: string;
@@ -22,6 +24,24 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('authToken');
     setUser(null);
   };
+
+  useEffect(() => {
+    const initUser = async () => {
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      try {
+        const decoded: any = jwtDecode(token);
+        const userId = decoded.sub || decoded.uuid;
+        const res = await apiService.getUserProfile({ id: userId });
+        setUser(res.data.userprofile);
+      } catch (error) {
+        console.error('Auto-login failed:', error);
+        logout();
+      }
+    };
+    initUser();
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser, logout }}>

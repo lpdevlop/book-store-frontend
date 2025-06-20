@@ -13,7 +13,6 @@ interface DecodedToken {
   uuid: string;
   sub?: string;
   role?: string;
-  // add other claims if needed
 }
 
 interface UserProfilePayload {
@@ -24,7 +23,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(true); // 🔧 new state
+  const [showLoginModal, setShowLoginModal] = useState(true);
   const { setUser } = useUser();
 
   const navigate = useNavigate();
@@ -43,8 +42,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const profileResponse = await apiService.getUserProfile(userData);
       const profile = profileResponse.data.userprofile;
       setUser(profile);
-      console.log('User Profile:', profile);
-
       if (onLogin) onLogin(token);
       navigate('/');
     } catch (err) {
@@ -70,11 +67,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         </div>
       ) : (
-        showLoginModal && ( // ✅ show login modal only if this is true
+        showLoginModal && ( 
           <div className="fixed inset-0 z-50 bg-black bg-opacity-60 flex justify-center items-center">
             <div className="bg-white w-full max-w-[500px] mx-4 md:mx-0 rounded-lg shadow-lg px-6 py-8 text-gray-700 relative">
               <button
-                onClick={() => setShowLoginModal(false)} // ✅ closes login modal
+                onClick={() => setShowLoginModal(false)} 
                 className="absolute top-4 right-6 text-gray-500 hover:text-black text-2xl"
                 aria-label="Close"
               >
@@ -127,7 +124,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 <button
                   onClick={() => {
                     setShowRegisterModal(true);
-                    setShowLoginModal(false); // hide login when showing register
+                    setShowLoginModal(false); 
                   }}
                   className="text-orange-600 font-semibold hover:underline"
                 >

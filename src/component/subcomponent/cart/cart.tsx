@@ -18,7 +18,6 @@ interface Book {
   imageUrl?: string;
   isAvailable: boolean;
 }
-// 1) Define your props interface
 
 
 export type CartItem = {
@@ -51,7 +50,7 @@ export const useCart = () => {
 };
 
 interface CartProviderProps {
-  children: React.ReactNode;       // ← explicitly declare children
+  children: React.ReactNode;       
 }
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
