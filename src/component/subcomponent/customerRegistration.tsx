@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import apiService from '../apiservices/apiService';
 
@@ -22,19 +21,30 @@ const CustomerRegistration: React.FC<CustomerRegistrationProps> = ({ onSuccess, 
   const [isLoading, setIsLoading] = useState(false);
   const [passwordError, setPasswordError] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const sanitizeInput = (input: string) => {
+    return input.replace(/[',",;,--]/g, ''); 
+  };
 
-    if (name === 'password') {
-      validatePassword(value);
-    }
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePhoneNumber = (phone: string) => {
+    const phoneRegex = /^[0-9]{10}$/; 
+    return phoneRegex.test(phone);
+  };
+
+  const validateName = (name: string) => {
+    const nameRegex = /^[a-zA-Z\s]+$/; 
+    return nameRegex.test(name);
   };
 
   const validatePassword = (password: string) => {
     const minLength = 8;
     const hasNumber = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
 
     if (password.length < minLength) {
       setPasswordError('Password must be at least 8 characters long.');
@@ -42,28 +52,65 @@ const CustomerRegistration: React.FC<CustomerRegistrationProps> = ({ onSuccess, 
       setPasswordError('Password must include at least one number.');
     } else if (!hasSpecialChar) {
       setPasswordError('Password must include at least one special character.');
+    } else if (!hasUppercase) {
+      setPasswordError('Password must include at least one uppercase letter.');
     } else {
       setPasswordError('');
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const sanitizedValue = sanitizeInput(value); 
+
+    setForm((prev) => ({ ...prev, [name]: sanitizedValue }));
+
+    if (name === 'password') {
+      validatePassword(sanitizedValue); 
+    }
+  };
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateEmail(form.email)) {
+      setMessage('❌ Invalid email address.');
+      return;
+    }
+
+    if (!validatePhoneNumber(form.phone)) {
+      setMessage('❌ Invalid phone number.');
+      return;
+    }
+
+    if (!validateName(form.firstName) || !validateName(form.lastName)) {
+      setMessage('❌ Name should contain only letters and spaces.');
+      return;
+    }
+
+    if (passwordError !== '') {
+      setMessage('❌ Password does not meet the required criteria.');
+      return;
+    }
+
     setIsLoading(true);
     setMessage('');
 
     try {
       const payload = {
         firstName: form.firstName,
-        lastName:form.lastName,
+        lastName: form.lastName,
         email: form.email,
         password: form.password,
         phoneNumber: form.phone,
         address: form.address,
       };
-      const response=apiService.registerCutomer(payload)
+
+      const response = await apiService.registerCutomer(payload);
+
       setMessage('✅ Customer registered successfully.');
       setForm({ firstName: '', lastName: '', email: '', password: '', phone: '', address: '' });
+
       if (onSuccess) onSuccess();
     } catch (error) {
       console.error(error);
@@ -135,9 +182,7 @@ const CustomerRegistration: React.FC<CustomerRegistrationProps> = ({ onSuccess, 
               required
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
             />
-            {passwordError && (
-              <p className="text-xs text-red-600 mt-1">{passwordError}</p>
-            )}
+            {passwordError && <p className="text-xs text-red-600 mt-1">{passwordError}</p>}
           </div>
 
           <div>

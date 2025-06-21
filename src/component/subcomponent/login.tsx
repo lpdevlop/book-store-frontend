@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import CustomerRegistration from './customerRegistration';
 import apiService from '../apiservices/apiService';
 import { useUser } from './context/userContext';
 import { jwtDecode } from 'jwt-decode';
@@ -9,9 +8,10 @@ import { IoIosCloseCircleOutline } from 'react-icons/io';
 
 type LoginProps = {
   onLogin?: (token: string) => void;
-   onClose?: () => void;
+  onClose?: () => void;
   onRegister?: () => void;
 };
+
 interface DecodedToken {
   uuid: string;
   sub?: string;
@@ -21,6 +21,7 @@ interface DecodedToken {
 interface UserProfilePayload {
   id: string;
 }
+
 const Login: React.FC<LoginProps> = ({ onLogin, onClose, onRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,20 +32,29 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClose, onRegister }) => {
 
   const navigate = useNavigate();
 
+  const sanitizeInput = (input: string): string => {
+    return input.replace(/[',",;,--]/g, '');
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      
-     const response = await apiService.login({ email, password });
-     const token = response.data.data.token;
-     localStorage.setItem('authToken', token);
-     const decoded: DecodedToken = jwtDecode(token);
-     const userData: UserProfilePayload = { id: decoded.sub! };
 
+    // Sanitize inputs before submitting
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedPassword = sanitizeInput(password);
+
+    try {
+      const response = await apiService.login({ email: sanitizedEmail, password: sanitizedPassword });
+      const token = response.data.data.token;
+      localStorage.setItem('authToken', token);
+
+      const decoded: DecodedToken = jwtDecode(token);
+      const userData: UserProfilePayload = { id: decoded.sub! };
 
       const profileResponse = await apiService.getUserProfile(userData);
       const profile = profileResponse.data.userprofile;
       setUser(profile);
+
       if (onLogin) onLogin(token);
       navigate('/');
     } catch (err) {
@@ -54,20 +64,17 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClose, onRegister }) => {
   };
 
   return (
-     <div >
-    {onClose && (
-      <IoIosCloseCircleOutline
-                  onClick={onClose}
-                  className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 cursor-pointer text-3xl"
-                />
+    <div>
+      {onClose && (
+        <IoIosCloseCircleOutline
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 cursor-pointer text-3xl"
+        />
       )}
 
       <div className="text-center mb-6">
         <div className="text-4xl">📚</div>
-<h2 className="text-2xl font-semibold mt-2 text-black">
-  Login
-</h2>
-
+        <h2 className="text-2xl font-semibold mt-2 text-black">Login</h2>
       </div>
 
       {error && <p className="text-red-600 text-center text-sm mb-4">{error}</p>}

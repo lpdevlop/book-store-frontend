@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import apiService from '../apiservices/apiService';
+import { IoIosCloseCircleOutline } from 'react-icons/io';
 
 interface BookForm {
   id?: number;
@@ -25,6 +26,11 @@ const emptyBook: BookForm = {
   isAvailable: true,
 };
 
+// ✅ Sanitization helper
+const sanitizeInput = (value: string) => {
+  return value.replace(/[<>"';`]/g, '');
+};
+
 const BookManagement: React.FC<BookManagementProps> = ({ onClose }) => {
   const [searchIsbn, setSearchIsbn] = useState('');
   const [form, setForm] = useState<BookForm>(emptyBook);
@@ -32,37 +38,39 @@ const BookManagement: React.FC<BookManagementProps> = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
-    if (!searchIsbn.trim()) return;
+    const cleanIsbn = sanitizeInput(searchIsbn.trim());
+    if (!cleanIsbn) return;
+
     setLoading(true);
     setMessage('');
     try {
-      const res = await apiService.searchBookByIsbn(searchIsbn.trim());
-      const bookss = res.data.book_searched_successfully;
-const book = res.data.book_searched_successfully as {
-  id?: number;
-  isbn: string;
-  title: string;
-  author: string;
-  price: number ;
-  imageUrl: string;
-  isAvailable: boolean;
-};
-
+      const res = await apiService.searchBookByIsbn(cleanIsbn);
+      const book = res.data.book_searched_successfully as {
+        id?: number;
+        isbn: string;
+        title: string;
+        author: string;
+        price: number;
+        imageUrl: string;
+        isAvailable: boolean;
+      };
       setForm({ ...emptyBook, ...book, price: book.price?.toString() });
-    } catch (err) {
-      setForm({ ...emptyBook, isbn: searchIsbn.trim() });
-      setMessage('Book not found. Fill form to add new book.');
+    } catch (err: any) {
+      const errMsg = err?.response?.data?.message || 'Book not found. Fill form to add new book.';
+      setForm({ ...emptyBook, isbn: cleanIsbn });
+      setMessage(errMsg);
     } finally {
       setLoading(false);
     }
   };
 
   const handleChange = (field: keyof BookForm, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }));
+    setForm(prev => ({ ...prev, [field]: sanitizeInput(value) }));
   };
 
   const handleSave = async () => {
     setLoading(true);
+    setMessage('');
     try {
       const payload = {
         ...form,
@@ -76,8 +84,9 @@ const book = res.data.book_searched_successfully as {
         setMessage('Book added successfully');
       }
       onClose?.();
-    } catch (err) {
-      setMessage('Operation failed');
+    } catch (err: any) {
+      const errMsg = err?.response?.data?.message || 'Operation failed';
+      setMessage(errMsg);
     } finally {
       setLoading(false);
     }
@@ -86,20 +95,30 @@ const book = res.data.book_searched_successfully as {
   const handleDeactivate = async () => {
     if (!form.id) return;
     setLoading(true);
+    setMessage('');
     try {
       await apiService.deactivateBook(form.id);
       setMessage('Book deactivated');
       onClose?.();
-    } catch (err) {
-      setMessage('Failed to deactivate');
+    } catch (err: any) {
+      const errMsg = err?.response?.data?.message || 'Failed to deactivate';
+      setMessage(errMsg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 w-full max-w-md bg-white rounded shadow-lg">
+    <div className="relative bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-auto">
+      {onClose && (
+        <IoIosCloseCircleOutline
+          onClick={onClose}
+          className="absolute -top-3 -right-3 text-gray-500 hover:text-gray-700 cursor-pointer text-3xl"
+        />
+      )}
+
       <h2 className="text-xl font-bold text-gray-900 mb-4">Book Management</h2>
+
       <div className="flex gap-2 mb-4">
         <label htmlFor="searchIsbn" className="sr-only">Search ISBN</label>
         <input
@@ -108,7 +127,7 @@ const book = res.data.book_searched_successfully as {
           type="text"
           placeholder="Search ISBN"
           value={searchIsbn}
-          onChange={e => setSearchIsbn(e.target.value)}
+          onChange={e => setSearchIsbn(sanitizeInput(e.target.value))}
         />
         <button
           className="bg-blue-600 text-white px-4 rounded disabled:opacity-50"
@@ -118,63 +137,25 @@ const book = res.data.book_searched_successfully as {
           Search
         </button>
       </div>
+
       <div className="grid gap-4">
-        <div>
-          <label htmlFor="isbn" className="block text-sm font-medium text-gray-700">ISBN</label>
-          <input
-            id="isbn"
-            className="mt-1 block w-full border p-2 rounded bg-gray-50 text-gray-900"
-            type="text"
-            placeholder="ISBN"
-            value={form.isbn}
-            onChange={e => handleChange('isbn', e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-          <input
-            id="title"
-            className="mt-1 block w-full border p-2 rounded bg-gray-50 text-gray-900"
-            type="text"
-            placeholder="Title"
-            value={form.title}
-            onChange={e => handleChange('title', e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="author" className="block text-sm font-medium text-gray-700">Author</label>
-          <input
-            id="author"
-            className="mt-1 block w-full border p-2 rounded bg-gray-50 text-gray-900"
-            type="text"
-            placeholder="Author"
-            value={form.author}
-            onChange={e => handleChange('author', e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
-          <input
-            id="price"
-            className="mt-1 block w-full border p-2 rounded bg-gray-50 text-gray-900"
-            type="number"
-            placeholder="Price"
-            value={form.price}
-            onChange={e => handleChange('price', e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">Image URL</label>
-          <input
-            id="imageUrl"
-            className="mt-1 block w-full border p-2 rounded bg-gray-50 text-gray-900"
-            type="text"
-            placeholder="Image URL"
-            value={form.imageUrl}
-            onChange={e => handleChange('imageUrl', e.target.value)}
-          />
-        </div>
+        {(['isbn', 'title', 'author', 'price', 'imageUrl'] as (keyof BookForm)[]).map(field => (
+          <div key={field}>
+            <label htmlFor={field} className="block text-sm font-medium text-gray-700">
+              {field === 'imageUrl' ? 'Image URL' : field.charAt(0).toUpperCase() + field.slice(1)}
+            </label>
+            <input
+              id={field}
+              type={field === 'price' ? 'number' : 'text'}
+              placeholder={field === 'imageUrl' ? 'Image URL' : field}
+              className="mt-1 block w-full border p-2 rounded bg-gray-50 text-gray-900"
+              value={(form as any)[field]}
+              onChange={e => handleChange(field, e.target.value)}
+            />
+          </div>
+        ))}
       </div>
+
       <div className="flex justify-end gap-2 mt-4">
         {form.id && (
           <button
@@ -193,6 +174,7 @@ const book = res.data.book_searched_successfully as {
           {form.id ? 'Update Book' : 'Add Book'}
         </button>
       </div>
+
       {message && <p className="mt-2 text-sm text-center text-gray-700">{message}</p>}
     </div>
   );

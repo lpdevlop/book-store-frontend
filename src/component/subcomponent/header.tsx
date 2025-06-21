@@ -22,7 +22,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isRegisterAdminOpen, setIsRegisterAdminOpen] = useState(false);
-  const [isBookModalOpen, setIsBookModalOpen] = useState(false); // Added state
+  const [isBookModalOpen, setIsBookModalOpen] = useState(false); 
   const [isCustomerRegisterOpen, setIsCustomerRegisterOpen] = useState(false);
   const handleLoginSuccess = (token: string) => {
     try {
@@ -112,7 +112,7 @@ const Header = () => {
   </MenuItem>
 )}
 
-              {(user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') && (
+              { user.role === 'ADMIN' && (
                 <MenuItem
                   onClick={() => {
                     setIsBookModalOpen(true); 
@@ -207,13 +207,7 @@ const Header = () => {
             outline: 'none',
           }}
         >
-          <AdminRegistration onSuccess={() => setIsRegisterAdminOpen(false)} />
-          <Button
-            onClick={() => setIsRegisterAdminOpen(false)}
-            sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
-          >
-            Cancel
-          </Button>
+          <AdminRegistration onClose={() => setIsRegisterAdminOpen(false)} onSuccess={() => setIsRegisterAdminOpen(false)} />
         </Box>
       </Modal>
 
@@ -236,14 +230,7 @@ const Header = () => {
             outline: 'none',
           }}
         >
-          <BookManagment
-          />
-          <Button
-            onClick={() => setIsBookModalOpen(false)}
-            sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
-          >
-            Cancel
-          </Button>
+    <BookManagment onClose={() => setIsBookModalOpen(false)} />
         </Box>
       </Modal>
 
@@ -262,9 +249,6 @@ const Header = () => {
           }}
         >
           <CustomerRegistration onClose={() => setIsCustomerRegisterOpen(false)} onSuccess={() => setIsCustomerRegisterOpen(false)} />
-          <Button onClick={() => setIsCustomerRegisterOpen(false)} sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}>
-            Cancel
-          </Button>
         </Box>
       </Modal>
 
