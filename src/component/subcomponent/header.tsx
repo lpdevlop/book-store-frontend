@@ -6,6 +6,7 @@ import Login from './login';
 import AdminRegistration from '../subcomponent/adminRegistration';
 import BookManagment from './bookManagement';
 import { useUser } from './context/userContext';
+import CustomerRegistration from './customerRegistration';
 
 interface DecodedToken {
   sub: string;
@@ -15,8 +16,6 @@ interface DecodedToken {
 
 const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
   const { user, setUser } = useUser();
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -24,7 +23,7 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isRegisterAdminOpen, setIsRegisterAdminOpen] = useState(false);
   const [isBookModalOpen, setIsBookModalOpen] = useState(false); // Added state
-
+  const [isCustomerRegisterOpen, setIsCustomerRegisterOpen] = useState(false);
   const handleLoginSuccess = (token: string) => {
     try {
       if (user?.role === 'ADMIN') {
@@ -176,13 +175,15 @@ const Header = () => {
             boxShadow: 24,
           }}
         >
-          <Login onLogin={handleLoginSuccess} />
-          <Button
-            onClick={() => setIsLoginOpen(false)}
-            sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}
-          >
-            Cancel
-          </Button>
+          <Login
+            onLogin={handleLoginSuccess}
+            onClose={() => setIsLoginOpen(false)}
+            onRegister={() => {
+              setIsLoginOpen(false);
+              setIsCustomerRegisterOpen(true);
+            }}
+          />
+  
         </Box>
       </Modal>
 
@@ -245,6 +246,28 @@ const Header = () => {
           </Button>
         </Box>
       </Modal>
+
+      <Modal open={isCustomerRegisterOpen} onClose={() => setIsCustomerRegisterOpen(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'white',
+            p: 4,
+            borderRadius: 2,
+            boxShadow: 24,
+          }}
+        >
+          <CustomerRegistration onClose={() => setIsCustomerRegisterOpen(false)} onSuccess={() => setIsCustomerRegisterOpen(false)} />
+          <Button onClick={() => setIsCustomerRegisterOpen(false)} sx={{ mt: 2, display: 'block', mx: 'auto', color: 'gray' }}>
+            Cancel
+          </Button>
+        </Box>
+      </Modal>
+
     </div>
   );
 };
