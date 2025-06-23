@@ -7,6 +7,9 @@ import AdminRegistration from '../subcomponent/adminRegistration';
 import BookManagment from './bookManagement';
 import { useUser } from './context/userContext';
 import CustomerRegistration from './customerRegistration';
+import { useCart } from './cart/cart';
+import OrdersPage from './order';
+import apiService from '../apiservices/apiService';
 
 interface DecodedToken {
   sub: string;
@@ -17,7 +20,7 @@ interface DecodedToken {
 const Header = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
-
+  const { cartItems  } = useCart();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -102,14 +105,31 @@ const Header = () => {
                 </MenuItem>
               )}
         {(user.role === 'ADMIN' || user.role === 'CUSTOMER') && (
-  <MenuItem
-    onClick={() => {
+<MenuItem
+  onClick={async () => {
+    handleMenuClose();
+
+    try {
+      const res = user?.role === 'ADMIN'
+        ? await apiService.getAllOrders()
+        : await apiService.getMyOrders();
+
+      const list = res.data?.data ?? [];
+
+      if (list.length === 0) {
+        alert('No orders found.');
+        return;
+      }
+
       navigate('/orders');
-      handleMenuClose();
-    }}
-  >
-    {user.role === 'ADMIN' ? 'All Orders' : 'My Orders'}
-  </MenuItem>
+    } catch (e) {
+      console.error(e);
+      alert('Failed to fetch orders');
+    }
+  }}
+>
+  {user.role === 'ADMIN' ? 'All Orders' : 'My Orders'}
+</MenuItem>
 )}
 
               { user.role === 'ADMIN' && (
@@ -154,8 +174,14 @@ const Header = () => {
               backgroundColor: '#facc15',
             },
           }}
-          onClick={() => navigate('/cart')}
-        >
+          onClick={() => {
+  if (cartItems .length === 0) {
+    alert('Your cart is empty!');
+    return;
+  }
+  navigate('/cart');
+}}
+               >
           Basket
         </Button>
       </div>
@@ -257,3 +283,4 @@ const Header = () => {
 };
 
 export default Header;
+
