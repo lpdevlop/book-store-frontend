@@ -18,8 +18,7 @@ const OrdersPage: React.FC = () => {
           list = response.data?.data ?? [];
         } else if (user?.role === 'CUSTOMER') {
           const response = await apiService.getMyOrders();
-          console.log('Customer orders response:', response);
-          list = response.data.data ?? []; // ✅ use direct array
+          list = response.data?.data ?? [];
         }
 
         setOrders(list);
@@ -35,7 +34,7 @@ const OrdersPage: React.FC = () => {
   }, [user]);
 
   return (
-    <div className="p-8">
+<div className="p-12 md:p-16 lg:p-20">
       <h2 className="text-2xl font-bold mb-4">
         {user?.role === 'ADMIN' ? 'All Orders' : 'My Orders'}
       </h2>
@@ -47,37 +46,37 @@ const OrdersPage: React.FC = () => {
       )}
 
       {orders.length > 0 && (
-        <table className="w-full border mt-4">
-          <thead>
-            <tr className="border-b text-left bg-gray-100">
-              <th className="p-2">Tracking Number</th>
-              <th className="p-2">Shipping Method</th>
-              <th className="p-2">Payment</th>
-              <th className="p-2">Total</th>
-              <th className="p-2">Items</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((o, i) => (
-              <tr key={i} className="border-b hover:bg-gray-50">
-                <td className="p-2">{o.trackingNumber ?? 'N/A'}</td>
-                <td className="p-2">{o.shippingMethod ?? 'Unknown'}</td>
-                <td className="p-2">{o.paymentMethod ?? 'N/A'}</td>
-                <td className="p-2">{o.totalAmount?.toFixed(2) ?? '0.00'}</td>
-                <td className="p-2">
-                  {Array.isArray(o.orderItems) ? o.orderItems.length : 0}
-                </td>
+        <div className="overflow-x-auto border rounded shadow">
+          <table className="w-full min-w-[700px] table-auto text-sm">
+            <thead className="bg-gray-100 sticky top-0 z-10">
+              <tr className="text-left border-b border-gray-300">
+                <th className="p-3 w-[200px]">Tracking Number</th>
+                <th className="p-3 w-[180px]">Shipping Method</th>
+                <th className="p-3 w-[150px]">Payment</th>
+                <th className="p-3 w-[120px] text-right">Total</th>
+                <th className="p-3 w-[100px] text-center">Items</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {orders.map((o, i) => (
+                <tr key={i} className="hover:bg-gray-50 h-[48px]">
+                  <td className="p-3 truncate">{o.trackingNumber ?? 'N/A'}</td>
+                  <td className="p-3">{o.shippingMethod ?? 'Unknown'}</td>
+                  <td className="p-3">{o.paymentMethod ?? 'N/A'}</td>
+                  <td className="p-3 text-right">
+                    {typeof o.totalAmount === 'number'
+                      ? o.totalAmount.toFixed(2)
+                      : '0.00'}
+                  </td>
+                  <td className="p-3 text-center">
+                    {Array.isArray(o.orderItems) ? o.orderItems.length : 0}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-
-      {/* Optional: Debug output for development */}
-  {/*     <pre className="mt-4 bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-        Debug Data:
-        {JSON.stringify(orders, null, 2)}
-      </pre> */}
     </div>
   );
 };
