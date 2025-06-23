@@ -117,4 +117,5 @@ export interface Order {
   trackingNumber:number;
   shippingMethod:string;
   paymentMethod:string
+  orderItems:OrderItem[] | null;
 }

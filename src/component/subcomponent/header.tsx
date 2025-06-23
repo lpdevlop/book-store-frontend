@@ -8,8 +8,6 @@ import BookManagment from './bookManagement';
 import { useUser } from './context/userContext';
 import CustomerRegistration from './customerRegistration';
 import { useCart } from './cart/cart';
-import OrdersPage from './order';
-import apiService from '../apiservices/apiService';
 
 interface DecodedToken {
   sub: string;
@@ -107,25 +105,9 @@ const Header = () => {
         {(user.role === 'ADMIN' || user.role === 'CUSTOMER') && (
 <MenuItem
   onClick={async () => {
-    handleMenuClose();
-
-    try {
-      const res = user?.role === 'ADMIN'
-        ? await apiService.getAllOrders()
-        : await apiService.getMyOrders();
-
-      const list = res.data?.data ?? [];
-
-      if (list.length === 0) {
-        alert('No orders found.');
-        return;
-      }
-
-      navigate('/orders');
-    } catch (e) {
-      console.error(e);
-      alert('Failed to fetch orders');
-    }
+    handleMenuClose()
+    navigate('/orders');
+ 
   }}
 >
   {user.role === 'ADMIN' ? 'All Orders' : 'My Orders'}

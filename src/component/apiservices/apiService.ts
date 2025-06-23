@@ -45,10 +45,10 @@ const apiService = {
     axiosInstance.post<{cutomerresponse:CustomerRegistrationResponse }>('/order',order),
 
   getAllOrders: () =>
-    axiosInstance.get<{data:Order[] }>('/order').then(raw => ({ data: raw.data })),
+    axiosInstance.get<{data:Order[] }>('/order'),
 
   getMyOrders: () =>
-    axiosInstance.get<{data:Order[] }>('/order/my').then(raw => ({ data: raw.data })),
+    axiosInstance.get<{data:Order[] }>('/order/my'),
 
 };
 
