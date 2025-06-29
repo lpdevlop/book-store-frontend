@@ -62,7 +62,7 @@ const Recommendation = () => {
             <img
               src={`${IMAGE_BASE_URL}${book.imageUrl}`}
               alt={book.title}
-              className="w-full h-48 object-cover rounded"
+              className="w-full h-48 object-contain rounded"
             />
             <ContentWrapper>
               <h3 className="font-semibold text-sm mt-2">{book.title}</h3>

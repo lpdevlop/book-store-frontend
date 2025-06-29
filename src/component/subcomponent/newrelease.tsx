@@ -82,7 +82,7 @@ const NewRelease = () => {
                 <img
                   src={`${IMAGE_BASE_URL}${book.imageUrl}`}
                   alt={book.title}
-                  className="w-full h-96 object-cover rounded shadow-md"
+                  className="w-full h-96 object-contain rounded shadow-md"
                 />
               </div>
             </div>

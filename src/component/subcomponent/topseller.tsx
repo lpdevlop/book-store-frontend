@@ -53,11 +53,10 @@ const Topseller = () => {
           <Card key={book.id} className="p-2">
             <img
               src={
-                book.imageUrl ||
-                'https://blog-cdn.reedsy.com/directories/gallery/248/large_65b0ae90317f7596d6f95bfdd6131398.jpg'
+                book.imageUrl
               }
               alt={book.title}
-              className="w-full h-48 object-cover rounded"
+  className="w-full h-48 object-contain object-center rounded"
             />
             <div className="p-4">
               <h3 className="font-semibold text-sm mt-2">
