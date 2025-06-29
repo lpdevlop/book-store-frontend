@@ -50,7 +50,7 @@ const Topseller = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {books.map(book => (
-          <Card key={book.id} className="p-2">
+          <Card key={book.id} className="flex flex-col h-full p-2">
             <img
               src={
                 book.imageUrl
@@ -58,7 +58,7 @@ const Topseller = () => {
               alt={book.title}
   className="w-full h-48 object-contain object-center rounded"
             />
-            <div className="p-4">
+            <div className="p-4 flex flex-col flex-grow justify-between">
               <h3 className="font-semibold text-sm mt-2">
                 {book.title}
               </h3>

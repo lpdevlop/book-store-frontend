@@ -86,10 +86,13 @@ const SearchResults: React.FC = () => {
                 <img
                   src={`${IMAGE_BASE_URL}${book.imageUrl}`}
                   alt={book.title}
-                  className="w-full h-28 object-cover rounded"
+                  className="w-full h-28 object-contain rounded"
                 />
                 <h2 className="text-sm font-semibold mt-2 line-clamp-1">
                   {book.title}
+                </h2>
+                  <h2 className="text-sm font-semibold mt-2 line-clamp-1">
+                  {book.price}
                 </h2>
                 <p className="text-xs text-gray-600 line-clamp-1">
                   {book.author}

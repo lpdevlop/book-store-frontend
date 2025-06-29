@@ -58,13 +58,13 @@ const Recommendation = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {books.map(book => (
-          <Card key={book.id} className="p-2">
+          <Card key={book.id} className="flex flex-col h-full p-2">
             <img
               src={`${IMAGE_BASE_URL}${book.imageUrl}`}
               alt={book.title}
               className="w-full h-48 object-contain rounded"
             />
-            <ContentWrapper>
+            <ContentWrapper className="flex flex-col flex-grow justify-between">
               <h3 className="font-semibold text-sm mt-2">{book.title}</h3>
               <p className="text-xs text-gray-500">{book.author}</p>
               <div className="text-sm mt-1">
