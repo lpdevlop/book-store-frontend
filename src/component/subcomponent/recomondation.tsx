@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Button, Card } from '@mui/material';
 import apiService from '../apiservices/apiService';
+  const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
 interface Book {
   id: number;
@@ -59,7 +60,7 @@ const Recommendation = () => {
         {books.map(book => (
           <Card key={book.id} className="p-2">
             <img
-              src={book.imageUrl || 'https://blog-cdn.reedsy.com/directories/gallery/248/large_65b0ae90317f7596d6f95bfdd6131398.jpg'}
+              src={`${IMAGE_BASE_URL}${book.imageUrl}`}
               alt={book.title}
               className="w-full h-48 object-cover rounded"
             />

@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import { useCart } from './cart/cart';
 import apiService from '../apiservices/apiService';
 import { PaginatedResponse, Books } from '../apiservices/apiTypes';
+const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
 const SearchResults: React.FC = () => {
   const location = useLocation();
@@ -83,7 +84,7 @@ const SearchResults: React.FC = () => {
                 className="border rounded p-2 shadow flex flex-col h-[320px]"
               >
                 <img
-                  src={book.imageUrl}
+                  src={`${IMAGE_BASE_URL}${book.imageUrl}`}
                   alt={book.title}
                   className="w-full h-28 object-cover rounded"
                 />

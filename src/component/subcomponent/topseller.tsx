@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { Button, Card } from '@mui/material';
 import apiService from '../apiservices/apiService';
+  const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
 interface Book {
   id: number;
@@ -28,7 +29,7 @@ const Topseller = () => {
           author: book.author,
           price: book.price ?? 19.99,
           originalPrice: book.price != null ? book.price + 5 : 24.99,
-          imageUrl: "https://res.cloudinary.com/upwork-cloud/image/upload/c_scale,w_1000/v1690383373/catalog/1684212490015363072/diszt1zxtjqnixyjx27f.jpg",
+          imageUrl: `${IMAGE_BASE_URL}${book.imageUrl}`,
           isAvailable: book.isAvailable,
         }));
         setBooks(formattedBooks);

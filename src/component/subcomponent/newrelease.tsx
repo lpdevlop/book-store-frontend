@@ -4,6 +4,7 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import apiService from '../apiservices/apiService';
+const IMAGE_BASE_URL = import.meta.env.VITE_IMAGE_BASE_URL;
 
 interface Book {
   title: string;
@@ -79,7 +80,7 @@ const NewRelease = () => {
               {/* Right: Image */}
               <div>
                 <img
-                  src="https://res.cloudinary.com/upwork-cloud/image/upload/c_scale,w_1000/v1690383373/catalog/1684212490015363072/diszt1zxtjqnixyjx27f.jpg"
+                  src={`${IMAGE_BASE_URL}${book.imageUrl}`}
                   alt={book.title}
                   className="w-full h-96 object-cover rounded shadow-md"
                 />

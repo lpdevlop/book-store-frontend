@@ -1,12 +1,14 @@
 
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
+  const API_BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 export interface CustomAxiosRequestConfig extends AxiosRequestConfig {
   skipAuth?: boolean;
 }
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8080/api/v1', 
+  baseURL: API_BASE_URL, 
   headers: {
     'Content-Type': 'application/json',
   },
